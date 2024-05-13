@@ -2,7 +2,11 @@
 
 PostgreSQL TLS Proxy (PGT-Proxy) is an intermediary server to easily and securely connect TLS enabled PG clients 
 to TLS enabled PG servers. This repository contains the Docker deployment for PGT-Proxy. The source code for PGT-Proxy 
-lives separately in [another repository](https://github.com/ambarltd/pgt-proxy). 
+lives separately in another repository.
+
+- Source code available [here](https://github.com/ambarltd/pgt-proxy)
+- Source code for Docker deployment available [here](https://github.com/ambarltd/pgt-proxy-docker)
+- Deployable via Docker [here](https://hub.docker.com/r/ambarltd/pgt-proxy)
 
 ## Usage
 
