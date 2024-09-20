@@ -7,7 +7,7 @@ RUN git clone https://github.com/ambarltd/pgt-proxy.git
 RUN mv pgt-proxy /pgt_proxy
 
 WORKDIR /pgt_proxy
-RUN git checkout tags/v1.0.0
+RUN git checkout tags/v1.1
 RUN cargo build --release
 
 # Here we are keeping images small (and secure), by only copying the executable to a new barebones image.
