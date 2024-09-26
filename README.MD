@@ -8,6 +8,8 @@ lives separately in another repository.
 - Rust source code available [on GitHub](https://github.com/ambarltd/pgt-proxy)
 - Read why we open sourced PGT Proxy [on our website](https://ambar.cloud/blog/connect-to-postgresql-securely-with-pgt-proxy)
 
+![Architecture Diagram](PGT-Proxy-Diagram.png)
+
 ## Usage
 
 **Step 1.** Create a Dockerfile based on pgt-proxy.
