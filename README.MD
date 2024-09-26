@@ -6,6 +6,7 @@ lives separately in another repository.
 
 - Pushed to DockerHub [repository](https://hub.docker.com/r/ambarltd/pgt-proxy)
 - Rust source code available [on GitHub](https://github.com/ambarltd/pgt-proxy)
+- Read why we open sourced PGT Proxy [on our website](https://ambar.cloud/blog/connect-to-postgresql-securely-with-pgt-proxy)
 
 ## Usage
 
