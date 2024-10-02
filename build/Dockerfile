@@ -1,4 +1,4 @@
-FROM rust:1.75.0-buster AS rust-base
+FROM rust:1.81.0-bookworm AS rust-base
 
 WORKDIR /tmp
 RUN apt-get update
@@ -7,7 +7,7 @@ RUN git clone https://github.com/ambarltd/pgt-proxy.git
 RUN mv pgt-proxy /pgt_proxy
 
 WORKDIR /pgt_proxy
-RUN git checkout tags/v1.1
+RUN git checkout tags/v1.2
 RUN cargo build --release
 
 # Here we are keeping images small (and secure), by only copying the executable to a new barebones image.
