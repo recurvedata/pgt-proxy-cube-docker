@@ -36,13 +36,13 @@ RUN COPY path/to/pgt_proxy/tls_certificate.pem /etc/pgt_proxy/server_tls/certifi
 RUN COPY path/to/pgt_proxy/tls_private_key.pem /etc/pgt_proxy/server_tls/key.pem
 
 # Set the arguments passed to PGT-Proxy.
-CMD ["--server-private-key-path", "/etc/pgt_proxy/server_tls/key.pem", \
+CMD ["--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key", \
     "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem", \
     "--server-port", "5432", \
     "--client-connection-host-or-ip", "destination.host.example.amazonaws.com", \
     "--client-connection-port", "5432", \
     "--client-tls-validation-host", "destination.host.example.amazonaws.com", \
-    "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/custom_cas/"]
+    "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/custom_cas/"] # keep in mind only files ending in .pem will be read
 ```
 
 **Step 2.** Deploy your Dockerfile to a machine that allows inbound and outbound traffic on the `--server-port` 
