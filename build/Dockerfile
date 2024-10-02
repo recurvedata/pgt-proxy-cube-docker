@@ -13,7 +13,7 @@ RUN cargo build --release
 # Here we are keeping images small (and secure), by only copying the executable to a new barebones image.
 # It's important to use debian-buster because that's where we compiled originally.
 # E.g., https://andygrove.io/2020/05/why-musl-extremely-slow/
-FROM debian:buster-20240423-slim
+FROM debian:bookworm-20240926-slim
 
 RUN mkdir -p /etc/pgt_proxy
 RUN mkdir -p /etc/pgt_proxy/client_tls
