@@ -7,7 +7,8 @@ RUN git clone https://github.com/ambarltd/pgt-proxy.git
 RUN mv pgt-proxy /pgt_proxy
 
 WORKDIR /pgt_proxy
-RUN git checkout tags/v1.2
+RUN git fetch
+RUN git checkout tags/v1.3
 RUN cargo build --release
 
 # Here we are keeping images small (and secure), by only copying the executable to a new barebones image.
@@ -30,8 +31,15 @@ RUN cp /etc/ssl/certs/ca-certificates.crt /etc/pgt_proxy/client_tls/firefox/fire
 
 # Option to Trust RDS Certificates
 # It can only be activated deliberately by passing "--client-ca-roots-path" at runtime
+# From https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html#UsingWithRDS.SSL.CertificatesAllRegions
 RUN mkdir -p /etc/pgt_proxy/client_tls/aws_rds
 COPY client_tls/aws_rds/ /etc/pgt_proxy/client_tls/aws_rds/
+
+# Option to Trust Azure + Digicert Certificates
+# It can only be activated deliberately by passing "--client-ca-roots-path" at runtime
+# From: https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-networking-ssl-tls#read-replicas-with-certificate-pinning-scenarios
+RUN mkdir -p /etc/pgt_proxy/client_tls/azure_digicert
+COPY client_tls/azure_digicert/ /etc/pgt_proxy/client_tls/azure_digicert/
 
 # Self Issued Certificate (for testing only)
 # It can only be activated deliberately by passing "--server-private-key-path", "--server-certificate-path" at runtime

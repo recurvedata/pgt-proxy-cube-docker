@@ -10,53 +10,101 @@ lives separately in another repository.
 - Rust source code available [on GitHub](https://github.com/ambarltd/pgt-proxy)
 - Read why we open sourced PGT Proxy [on our website](https://ambar.cloud/blog/connect-to-postgresql-securely-with-pgt-proxy)
 
+### Architecture Diagram
+
 ![Architecture Diagram](PGT-Proxy-Diagram.png)
 
 ## Usage
 
-**Step 1.** Create a Dockerfile based on pgt-proxy.
+**Step 1.** Run the Docker image ambarltd/pgt-proxy, overriding the Docker CMD with the arguments
+that PGT-Proxy requires. You will need to mount volumes for:
 
-```Dockerfile
-FROM ambarltd/pgt-proxy:latest
+1. PGT-Proxy's private key
+2. PGT-Proxy's certificate,
+3. The certificate authority/authorities that PGT-Proxy should trust (optional, you can also choose preset CAs).
 
-# PGT-Proxy will need to trust a set of certificate authorities 
-# (to be specified at runtime through "--client-ca-roots-path")
-# 
-# Use a prepackaged set of root authorities such as RDS's CAs or Firefox's default trusted CAs, living at these directories:
-#   /etc/pgt_proxy/client_tls/aws_rds/
-#   /etc/pgt_proxy/client_tls/firefox/
-# Or specify trusted CAs in the directory /etc/pgt_proxy/client_tls/custom_cas/ (e.g., Google Cloud SQL uses a custom CA)
-RUN COPY path/to/postgres_destination_server/certificate_authority_certificates_in_pem_format/ /etc/pgt_proxy/client_tls/custom_cas/
+See below, 4 examples using docker compose.
 
-# PGT-Proxy will need to serve TLS traffic, which requires a certificate and its corresponding private key
-# (to be specified at runtime through "--server-private-key-path", "--server-certificate-path")
-# 
-# The certificate needs to be trusted by all pg clients connecting through PGT-Proxy. 
-# Thus it is recommended to use a genuine TLS certificate issued by a public certificate authority
-# that is already trusted by default by pg clients.
-RUN COPY path/to/pgt_proxy/tls_certificate.pem /etc/pgt_proxy/server_tls/certificate.pem
-RUN COPY path/to/pgt_proxy/tls_private_key.pem /etc/pgt_proxy/server_tls/key.pem
-
-# Set the arguments passed to PGT-Proxy.
-CMD ["--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key", \
-    "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem", \
-    "--server-port", "5432", \
-    "--client-connection-host-or-ip", "destination.host.example.amazonaws.com", \
-    "--client-connection-port", "5432", \
-    "--client-tls-validation-host", "destination.host.example.amazonaws.com", \
-    "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/custom_cas/"] # keep in mind only files ending in .pem will be read
+```yaml
+services:
+    pgt-proxy-conecting-to-aws-rds:
+        image: ambarltd/pgt-proxy:latest
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
+            - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
+        command: [
+            "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key", \
+            "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem", \
+            "--server-port", "5432", \
+            "--client-connection-host-or-ip", "destination.host.example.amazonaws.com", \
+            "--client-connection-port", "5432", \
+            "--client-tls-validation-host", "destination.host.example.amazonaws.com", \
+            "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/aws_rds/"
+        ]
+    pgt-proxy-connecting-to-azure-digicert:
+        image: ambarltd/pgt-proxy:latest
+        ports:
+            - "5433:5432"
+        volumes:
+          - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
+          - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
+        command: [
+              "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key", \
+              "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem", \
+              "--server-port", "5432", \
+              "--client-connection-host-or-ip", "destination.host.example.azure.com", \
+              "--client-connection-port", "5432", \
+              "--client-tls-validation-host", "destination.host.example.azure.com", \
+              "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/azure_digicert/"
+        ]
+    pgt-proxy-connecting-to-database-with-certificate-authorities-trusted-by-firefox-web-browser:
+        image: ambarltd/pgt-proxy:latest
+        ports:
+            - "5433:5432"
+        volumes:
+          - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
+          - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
+        command: [
+              "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key", \
+              "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem", \
+              "--server-port", "5432", \
+              "--client-connection-host-or-ip", "destination.host.example.com", \
+              "--client-connection-port", "5432", \
+              "--client-tls-validation-host", "destination.host.example.com", \
+              "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/firefox/"
+        ]
+    pgt-proxy-connecting-to-database-with-custom-certificate-authorities:
+          image: ambarltd/pgt-proxy:latest
+          ports:
+              - "5432:5432"
+          volumes:
+                - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
+                - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
+                - ./path/to/postgres_destination_server/your_certificate_authority_certificates_in_pem_format/:/etc/pgt_proxy/client_tls/custom_cas/
+          command: [
+                "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key", \
+                "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem", \
+                "--server-port", "5432", \
+                "--client-connection-host-or-ip", "destination.host.example.com", \
+                "--client-connection-port", "5432", \
+                "--client-tls-validation-host", "destination.host.example.com", \
+                "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/custom_cas/"
+          ]
 ```
 
-**Step 2.** Deploy your Dockerfile to a machine that allows inbound and outbound traffic on the `--server-port` 
-(e.g., 5432).
+**Step 2.** Make sure the machine in which you have deployed ambarltd/pgt-proxy allows incoming traffic on the port you
+picked. In the examples above, PGT-Proxy's server serves traffic on port 5432.
 
-**Step 3.** Using DNS, point the hostname inside `/etc/pgt_proxy/server_tls/certificate.pem` to the IP address 
-of the machine in step 2.
+**Step 3.** Using DNS, point the hostname associated with the certificate in `/etc/pgt_proxy/server_tls/certificate.pem` 
+to the IP address of the machine in step 2.
 
-**Step 4.** Connect to PGT-Proxy via the machine in step 2, using your favorite pg client. E.g., 
+**Step 4.** Connect to PGT-Proxy from another machine, using your favorite pg client. E.g., 
 
 ```bash
 psql 'sslmode=verify-full host=pgtproxy.example.com port=5432 user=admin password=pass dbname=postgres channel_binding=disable'
+# Notice that channel binding needs to be disabled for PGT-Proxy to work.
 ```
 
 **Suggestions**
