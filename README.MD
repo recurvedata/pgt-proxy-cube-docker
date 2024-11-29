@@ -44,6 +44,9 @@ services:
             "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/aws_rds/"
         ]
     pgt-proxy-connecting-to-azure-digicert:
+        # Connections to Azure managed PG databases require the use of 1 Microsoft root 
+        # certificate + 2 DigiCert root certificates as per:
+        # https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/concepts-networking-ssl-tls#read-replicas-with-certificate-pinning-scenarios
         image: ambarltd/pgt-proxy:latest
         ports:
             - "5433:5432"
