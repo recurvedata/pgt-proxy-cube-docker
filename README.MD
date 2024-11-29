@@ -36,11 +36,11 @@ services:
             - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
         command: [
             "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key",
-            "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem"
-            "--server-port", "5432"
-            "--client-connection-host-or-ip", "destination.host.example.amazonaws.com"
-            "--client-connection-port", "5432"
-            "--client-tls-validation-host", "destination.host.example.amazonaws.com"
+            "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem",
+            "--server-port", "5432",
+            "--client-connection-host-or-ip", "destination.host.example.amazonaws.com",
+            "--client-connection-port", "5432",
+            "--client-tls-validation-host", "destination.host.example.amazonaws.com",
             "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/aws_rds/"
         ]
     pgt-proxy-connecting-to-azure-digicert:
@@ -51,49 +51,49 @@ services:
         ports:
             - "5433:5432"
         volumes:
-          - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
-          - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
+            - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
+            - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
         command: [
-              "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key"
-              "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem"
-              "--server-port", "5432"
-              "--client-connection-host-or-ip", "destination.host.example.azure.com"
-              "--client-connection-port", "5432"
-              "--client-tls-validation-host", "destination.host.example.azure.com"
-              "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/azure_digicert/"
+            "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key",
+            "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem",
+            "--server-port", "5432",
+            "--client-connection-host-or-ip", "destination.host.example.azure.com",
+            "--client-connection-port", "5432",
+            "--client-tls-validation-host", "destination.host.example.azure.com",
+            "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/azure_digicert/"
         ]
     pgt-proxy-connecting-to-database-with-certificate-authorities-trusted-by-firefox-web-browser:
         image: ambarltd/pgt-proxy:latest
         ports:
             - "5433:5432"
         volumes:
-          - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
-          - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
+            - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
+            - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
         command: [
-              "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key"
-              "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem"
-              "--server-port", "5432"
-              "--client-connection-host-or-ip", "destination.host.example.com"
-              "--client-connection-port", "5432"
-              "--client-tls-validation-host", "destination.host.example.com"
-              "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/firefox/"
+            "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key",
+            "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem",
+            "--server-port", "5432",
+            "--client-connection-host-or-ip", "destination.host.example.com",
+            "--client-connection-port", "5432",
+            "--client-tls-validation-host", "destination.host.example.com",
+            "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/firefox/"
         ]
     pgt-proxy-connecting-to-database-with-custom-certificate-authorities:
           image: ambarltd/pgt-proxy:latest
           ports:
               - "5432:5432"
           volumes:
-                - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
-                - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
-                - ./path/to/postgres_destination_server/your_certificate_authority_certificates_in_pem_format/:/etc/pgt_proxy/client_tls/custom_cas/
+              - ./path/to/pgt_proxy/your_tls_private_key.pem:/etc/pgt_proxy/server_tls/key.pem
+              - ./path/to/pgt_proxy/your_tls_certificate.pem:/etc/pgt_proxy/server_tls/certificate.pem
+              - ./path/to/postgres_destination_server/your_certificate_authority_certificates_in_pem_format/:/etc/pgt_proxy/client_tls/custom_cas/
           command: [
-                "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key"
-                "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem"
-                "--server-port", "5432"
-                "--client-connection-host-or-ip", "destination.host.example.com"
-                "--client-connection-port", "5432"
-                "--client-tls-validation-host", "destination.host.example.com"
-                "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/custom_cas/"
+              "--server-private-key-path", "/etc/pgt_proxy/server_tls/key.key",
+              "--server-certificate-path", "/etc/pgt_proxy/server_tls/certificate.pem",
+              "--server-port", "5432",
+              "--client-connection-host-or-ip", "destination.host.example.com",
+              "--client-connection-port", "5432",
+              "--client-tls-validation-host", "destination.host.example.com",
+              "--client-ca-roots-path", "/etc/pgt_proxy/client_tls/custom_cas/"
           ]
 ```
 
