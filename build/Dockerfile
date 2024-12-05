@@ -3,7 +3,8 @@ FROM rust:1.81.0-bookworm AS rust-base
 WORKDIR /tmp
 RUN apt-get update
 RUN apt-get install git
-RUN git clone https://github.com/ambarltd/pgt-proxy.git
+# RUN git clone https://github.com/ambarltd/pgt-proxy.git
+RUN git clone https://github.com/recurvedata/pgt-proxy-cube.git
 RUN mv pgt-proxy /pgt_proxy
 
 WORKDIR /pgt_proxy
